@@ -1,3 +1,4 @@
+use proc_macro2::TokenStream;
 use syn::{
     Result,
     Token,
@@ -6,11 +7,12 @@ use syn::{
     FieldValue,
     parse::{Parse, ParseStream},
 };
+use quote::{quote, ToTokens, TokenStreamExt};
 
 pub struct Construction {
-    struct_name: Ident,
-    semicolon: Token![;],
-    fields: Punctuated<FieldValue, Token![,]>,
+    pub struct_name: Ident,
+    pub semicolon: Token![;],
+    pub fields: Punctuated<FieldValue, Token![,]>,
 }
 impl Parse for Construction {
     fn parse(input: ParseStream) -> Result<Self> {
