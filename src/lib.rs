@@ -2,14 +2,34 @@ mod construct;
 
 extern crate proc_macro;
 use proc_macro::TokenStream;
-use syn::parse_macro_input;
+use proc_macro2::Span;
+use syn::{parse_macro_input, DeriveInput, Ident};
 use quote::quote;
+use proc_macro_crate::crate_name;
 
 use crate::construct::Construction;
 
-#[proc_macro_attribute]
-pub fn variadic_constructor(attr: TokenStream, item: TokenStream) -> TokenStream {
-    unimplemented!()
+#[proc_macro_derive(VariadicConstructor)]
+pub fn variadic_constructor(input: TokenStream) -> TokenStream {
+    let DeriveInput {
+        ident,
+        ..
+    } = parse_macro_input!(input as DeriveInput);
+
+    let this_crate = crate_name("constructor-macro").unwrap_or("constructor_macro".to_string());
+    let this_crate = Ident::new(&this_crate, Span::call_site());
+
+    From::from(quote! {
+        #[macro_export]
+        macro_rules! #ident {
+            ( $( $tokens: tt )* ) => {{
+                #this_crate::construct_variadic! {
+                    #ident;
+                    $($tokens)*
+                }
+            }};
+        }
+    })
 }
 
 #[proc_macro]
