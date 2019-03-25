@@ -1,3 +1,5 @@
+extern crate proc_macro;
+
 #[cfg(test)]
 mod tests {
     #[test]
