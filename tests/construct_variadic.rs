@@ -4,7 +4,7 @@ use constructor_macro::construct_variadic;
 
 #[test]
 fn construct_a_struct() {
-    #[derive(Default)]
+    #[derive(Debug, Default, PartialEq)]
     struct Thing {
         field1: usize,
         field2: usize,
@@ -13,4 +13,6 @@ fn construct_a_struct() {
         Thing;
         field1: 1,
     };
+    
+    assert_eq!(thing, Thing { field1: 1, field2: 0 });
 }
