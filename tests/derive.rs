@@ -4,16 +4,24 @@ use constructor_macro::VariadicConstructor;
 
 #[test]
 fn construct_a_struct() {
-    #[derive(Default, VariadicConstructor)]
+    #[derive(Debug, Default, PartialEq, VariadicConstructor)]
     struct Thing {
         field1: usize,
         field2: usize,
     }
 
+    let expected = Thing {
+        field1: 1,
+        field2: 0,
+    };
+
     let thing = Thing! {
         field1: 1
     };
+    assert_eq!(thing, expected);
+
     let thing_with_comma = Thing! {
         field1: 1,
     };
+    assert_eq!(thing_with_comma, expected);
 }

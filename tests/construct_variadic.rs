@@ -13,6 +13,6 @@ fn construct_a_struct() {
         Thing;
         field1: 1,
     };
-    
+
     assert_eq!(thing, Thing { field1: 1, field2: 0 });
 }
