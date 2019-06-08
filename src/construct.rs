@@ -1,4 +1,3 @@
-use proc_macro2::TokenStream;
 use syn::{
     Result,
     Token,
@@ -7,7 +6,6 @@ use syn::{
     FieldValue,
     parse::{Parse, ParseStream},
 };
-use quote::{quote, ToTokens, TokenStreamExt};
 
 pub struct Construction {
     pub struct_name: Ident,
