@@ -3,6 +3,7 @@ name = "constructor-macro"
 version = "0.2.0"
 authors = ["Kai <thiskaiguy@gmail.com>"]
 edition = "2018"
+license = "MIT"
 
 [lib]
 proc-macro = true
