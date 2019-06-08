@@ -26,12 +26,18 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
 
     match input.data {
         syn::Data::Struct(ref struct_data) => {
-            let defaults = match struct_data.fields {
+            let default_impl = match struct_data.fields {
                 syn::Fields::Unit => {
-                    unimplemented!("Unit struct")
+                    quote! {
+                        impl ::core::default::Default for #ident {
+                            fn default() -> Self {
+                                #ident
+                            }
+                        }
+                    }
                 },
                 syn::Fields::Named(ref fields_named) => {
-                    fields_named.named.iter().map(|field| {
+                    let defaults = fields_named.named.iter().map(|field| {
                         let ident = field.ident.as_ref().unwrap();
                         let mut default_value: (&Ident, Expr) = (ident, parse_quote! {
                             ::core::default::Default::default()
@@ -47,20 +53,25 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
                             }
                         }
                         default_value
-                    })
+                    });
+
+                    let (fields, values): (Vec<_>, Vec<_>) = defaults.unzip();
+                    quote! {
+                        impl ::core::default::Default for #ident {
+                            fn default() -> Self {
+                                #ident {
+                                    #(#fields: #values),*
+                                }
+                            }
+                        }
+                    }
                 },
                 _ => panic!("Tuple structs not supported"),
             };
-            let (fields, values): (Vec<_>, Vec<_>) = defaults.unzip();
 
             From::from(quote! {
-                impl ::core::default::Default for #ident {
-                    fn default() -> Self {
-                        #ident {
-                            #(#fields: #values),*
-                        }
-                    }
-                }
+                #default_impl
+
                 #[macro_export]
                 macro_rules! #ident {
                     ( $( $tokens: tt )* ) => {{

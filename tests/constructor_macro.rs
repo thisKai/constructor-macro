@@ -55,3 +55,11 @@ fn default_value_attribute() {
     assert_eq!(thing.field1, 100);
     assert_eq!(thing.field2, 5);
 }
+
+#[test]
+fn unit_struct() {
+    #[derive(Debug, PartialEq, ConstructorMacro)]
+    struct EmptyThing;
+
+    let _thing = EmptyThing!();
+}
