@@ -58,7 +58,7 @@ fn default_value_attribute() {
 
 #[test]
 fn unit_struct() {
-    #[derive(Debug, PartialEq, ConstructorMacro)]
+    #[derive(ConstructorMacro)]
     struct EmptyThing;
 
     let _thing = EmptyThing!();
