@@ -9,12 +9,10 @@ use proc_macro_crate::crate_name;
 
 use crate::construct::Construction;
 
-#[proc_macro_derive(VariadicConstructor)]
-pub fn variadic_constructor(input: TokenStream) -> TokenStream {
-    let DeriveInput {
-        ident,
-        ..
-    } = parse_macro_input!(input as DeriveInput);
+#[proc_macro_derive(ConstructorMacro)]
+pub fn constructor_macro(item: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(item as DeriveInput);
+    let ident = &input.ident;
 
     let this_crate = crate_name("constructor-macro").unwrap_or("constructor_macro".to_string());
     let this_crate = Ident::new(&this_crate, Span::call_site());

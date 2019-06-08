@@ -1,10 +1,10 @@
 #![feature(proc_macro_hygiene)]
 
-use constructor_macro::VariadicConstructor;
+use constructor_macro::ConstructorMacro;
 
 #[test]
 fn construct_a_struct() {
-    #[derive(Debug, Default, PartialEq, VariadicConstructor)]
+    #[derive(Debug, Default, PartialEq, ConstructorMacro)]
     struct Thing {
         field1: usize,
         field2: usize,
