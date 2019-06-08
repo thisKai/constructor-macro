@@ -17,17 +17,22 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
     let this_crate = crate_name("constructor-macro").unwrap_or("constructor_macro".to_string());
     let this_crate = Ident::new(&this_crate, Span::call_site());
 
-    From::from(quote! {
-        #[macro_export]
-        macro_rules! #ident {
-            ( $( $tokens: tt )* ) => {{
-                #this_crate::construct_variadic! {
-                    #ident;
-                    $($tokens)*
+    match input.data {
+        syn::Data::Struct(_) => {
+            From::from(quote! {
+                #[macro_export]
+                macro_rules! #ident {
+                    ( $( $tokens: tt )* ) => {{
+                        #this_crate::construct_variadic! {
+                            #ident;
+                            $($tokens)*
+                        }
+                    }};
                 }
-            }};
+            })
         }
-    })
+        _ => panic!("Must be a struct"),
+    }
 }
 
 #[proc_macro]
