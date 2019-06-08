@@ -5,6 +5,7 @@ version = "0.2.0"
 authors = ["Kai <thiskaiguy@gmail.com>"]
 edition = "2018"
 license = "MIT"
+repository = "https://github.com/thisKai/constructor-macro"
 
 [lib]
 proc-macro = true
