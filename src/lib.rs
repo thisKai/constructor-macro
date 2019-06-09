@@ -26,13 +26,18 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
 
     match input.data {
         syn::Data::Struct(ref struct_data) => {
-            let default_impl = match struct_data.fields {
+            let tokens = match struct_data.fields {
                 syn::Fields::Unit => {
                     quote! {
                         impl ::core::default::Default for #ident {
                             fn default() -> Self {
                                 #ident
                             }
+                        }
+
+                        #[macro_export]
+                        macro_rules! #ident {
+                            () => {{ #ident }};
                         }
                     }
                 },
@@ -64,24 +69,22 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
                                 }
                             }
                         }
+
+                        #[macro_export]
+                        macro_rules! #ident {
+                            ( $( $tokens: tt )* ) => {{
+                                #this_crate::construct_variadic! {
+                                    #ident;
+                                    $($tokens)*
+                                }
+                            }};
+                        }
                     }
                 },
                 _ => panic!("Tuple structs not supported"),
             };
 
-            From::from(quote! {
-                #default_impl
-
-                #[macro_export]
-                macro_rules! #ident {
-                    ( $( $tokens: tt )* ) => {{
-                        #this_crate::construct_variadic! {
-                            #ident;
-                            $($tokens)*
-                        }
-                    }};
-                }
-            })
+            tokens.into()
         }
         _ => panic!("Must be a struct"),
     }
