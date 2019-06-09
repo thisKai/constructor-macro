@@ -61,3 +61,15 @@ fn unit_struct() {
 
     let _thing = EmptyThing!();
 }
+
+#[test]
+fn module() {
+    mod module {
+        use super::*;
+        #[derive(ConstructorMacro)]
+        pub struct InnerThing;
+    }
+
+    use module::InnerThing;
+    let _thing = InnerThing!();
+}
