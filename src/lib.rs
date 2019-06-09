@@ -12,17 +12,13 @@ use syn::{
     Expr,
 };
 use quote::quote;
-use proc_macro_crate::crate_name;
 
-use crate::construct::{Construction, DefaultValue};
+use crate::construct::DefaultValue;
 
 #[proc_macro_derive(ConstructorMacro, attributes(default))]
 pub fn constructor_macro(item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as DeriveInput);
     let DeriveInput { ref ident, .. } = input;
-
-    let this_crate = crate_name("constructor-macro").unwrap_or("constructor_macro".to_string());
-    let this_crate = Ident::new(&this_crate, Span::call_site());
 
     match input.data {
         syn::Data::Struct(ref struct_data) => {
@@ -72,10 +68,15 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
 
                         #[macro_export]
                         macro_rules! #ident {
-                            ( $( $tokens: tt )* ) => {{
-                                #this_crate::construct_variadic! {
-                                    #ident;
-                                    $($tokens)*
+                            ( $( $field: ident : $value: expr, )* ) => {{
+                                #ident {
+                                    $( $field : $value, )*
+                                    ..::core::default::Default::default()
+                                }
+                            }};
+                            ( $( $field: ident : $value: expr ),* ) => {{
+                                #ident! {
+                                    $( $field : $value, )*
                                 }
                             }};
                         }
@@ -88,19 +89,4 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
         }
         _ => panic!("Must be a struct"),
     }
-}
-
-#[proc_macro]
-pub fn construct_variadic(tokens: TokenStream) -> TokenStream {
-    let Construction {
-        struct_name,
-        fields,
-        ..
-    } = parse_macro_input!(tokens as Construction);
-    From::from(quote! {
-        #struct_name {
-            #(#fields,)*
-            ..Default::default()
-        }
-    })
 }
