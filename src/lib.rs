@@ -44,13 +44,15 @@ pub fn constructor_macro(item: TokenStream) -> TokenStream {
                             ::core::default::Default::default()
                         });
                         for attr in field.attrs.iter() {
-                            let tts = attr.tts.clone();
-                            let attr: syn::Result<DefaultValue> = parse2(tts);
+                            if attr.path.is_ident("default") {
+                                let tts = attr.tts.clone();
+                                let attr: syn::Result<DefaultValue> = parse2(tts);
 
-                            if let Ok(attr) = attr {
+                                if let Ok(attr) = attr {
 
-                                let value = attr.value;
-                                default_value = (&ident, value);
+                                    let value = attr.value;
+                                    default_value = (&ident, value);
+                                }
                             }
                         }
                         default_value
