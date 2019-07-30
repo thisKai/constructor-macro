@@ -18,9 +18,9 @@ fn values() {
 fn integers() {
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct Integers {
-        #[default = 100]
+        #[default(100)]
         field1: usize,
-        #[default = 5]
+        #[default(5)]
         field2: usize,
     }
 
@@ -32,11 +32,12 @@ fn integers() {
 
 #[test]
 fn unit_struct() {
+    #[derive(Debug, PartialEq)]
     struct Value;
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct UnitStruct {
-        #[default = Value]
+        #[default(Value)]
         field1: Value,
     }
 
@@ -47,11 +48,12 @@ fn unit_struct() {
 
 #[test]
 fn tuple_struct() {
+    #[derive(Debug, PartialEq)]
     struct Value(usize);
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct TupleStruct {
-        #[default = Value(0)]
+        #[default(Value(0))]
         field1: Value,
     }
 
@@ -62,11 +64,12 @@ fn tuple_struct() {
 
 #[test]
 fn r#struct() {
+    #[derive(Debug, PartialEq)]
     struct Value { value: usize };
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct Struct {
-        #[default = Value { value: 0 }]
+        #[default(Value { value: 0 })]
         field1: Value,
     }
 
@@ -77,13 +80,14 @@ fn r#struct() {
 
 #[test]
 fn c_enum() {
+    #[derive(Debug, PartialEq)]
     enum Either {
         Left,
         Right,
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct CEnum {
-        #[default = Either::Left]
+        #[default(Either::Left)]
         field1: Either,
     }
 
@@ -94,13 +98,14 @@ fn c_enum() {
 
 #[test]
 fn enum_tuple_variant() {
+    #[derive(Debug, PartialEq)]
     enum Either {
         Left(usize),
         Right(usize),
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct EnumTupleVariant {
-        #[default = Either::Left(0)]
+        #[default(Either::Left(0))]
         field1: Either,
     }
 
@@ -111,13 +116,14 @@ fn enum_tuple_variant() {
 
 #[test]
 fn enum_struct_variant() {
+    #[derive(Debug, PartialEq)]
     enum Either {
         Left { value: usize },
         Right { value: usize },
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
     struct EnumStructVariant {
-        #[default = Either::Left { value: 0 }]
+        #[default(Either::Left { value: 0 })]
         field1: Either,
     }
 

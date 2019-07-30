@@ -1,19 +1,22 @@
 use syn::{
     Result,
-    Token,
     Expr,
+    parenthesized,
+    token::Paren,
     parse::{Parse, ParseStream},
 };
 
 pub struct DefaultValue {
-    pub eq: Token![=],
+    pub paren: Paren,
     pub value: Expr,
 }
 impl Parse for DefaultValue {
     fn parse(input: ParseStream) -> Result<Self> {
+        dbg!(&input);
+        let content;
         Ok(Self {
-            eq: input.parse()?,
-            value: input.parse()?,
+            paren: parenthesized!(content in input),
+            value: content.parse()?,
         })
     }
 }
