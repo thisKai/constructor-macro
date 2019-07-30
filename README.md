@@ -3,7 +3,7 @@
 ## Cargo.toml
 ```toml
 [dependencies]
-constructor-macro = "0.2"
+constructor-macro = "0.4"
 ```
 
 ## Example
