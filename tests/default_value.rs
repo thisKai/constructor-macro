@@ -1,171 +1,127 @@
 use constructor_macro::ConstructorMacro;
 
 #[test]
-fn construct_a_struct() {
+fn values() {
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct Thing {
+    struct Values {
         field1: usize,
         field2: usize,
     }
 
-    let expected = Thing {
-        field1: 1,
-        field2: 0,
-    };
-
-    let thing = Thing! {
-        field1: 1
-    };
-    assert_eq!(thing, expected);
-
-    let thing_with_comma = Thing! {
-        field1: 1,
-    };
-    assert_eq!(thing_with_comma, expected);
-}
-
-#[test]
-fn default_value() {
-    #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct Thing1 {
-        field1: usize,
-        field2: usize,
-    }
-
-    let thing = Thing1!();
+    let thing = Values!();
 
     assert_eq!(thing.field1, 0);
     assert_eq!(thing.field2, 0);
 }
 
 #[test]
-fn default_value_attribute() {
+fn integers() {
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct Thing2 {
+    struct Integers {
         #[default = 100]
         field1: usize,
         #[default = 5]
         field2: usize,
     }
 
-    let thing = Thing2!();
+    let thing = Integers!();
 
     assert_eq!(thing.field1, 100);
     assert_eq!(thing.field2, 5);
 }
 
 #[test]
-fn default_value_unit_struct() {
+fn unit_struct() {
     struct Value;
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueUnitStruct {
+    struct UnitStruct {
         #[default = Value]
         field1: Value,
     }
 
-    let thing = DefaultValueUnitStruct!();
+    let thing = UnitStruct!();
 
     assert_eq!(thing.field1, Value);
 }
 
 #[test]
-fn default_value_tuple_struct() {
+fn tuple_struct() {
     struct Value(usize);
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueTupleStruct {
+    struct TupleStruct {
         #[default = Value(0)]
         field1: Value,
     }
 
-    let thing = DefaultValueTupleStruct!();
+    let thing = TupleStruct!();
 
     assert_eq!(thing.field1, Value(0));
 }
 
 #[test]
-fn default_value_struct() {
-    struct Value{ value: usize };
+fn r#struct() {
+    struct Value { value: usize };
 
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueStruct {
+    struct Struct {
         #[default = Value { value: 0 }]
         field1: Value,
     }
 
-    let thing = DefaultValueStruct!();
+    let thing = Struct!();
 
     assert_eq!(thing.field1, Value { value: 0 });
 }
 
 #[test]
-fn default_value_c_enum() {
+fn c_enum() {
     enum Either {
         Left,
         Right,
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueCEnum {
+    struct CEnum {
         #[default = Either::Left]
         field1: Either,
     }
 
-    let thing = DefaultValueCEnum!();
+    let thing = CEnum!();
 
     assert_eq!(thing.field1, Either::Left);
 }
 
 #[test]
-fn default_value_enum_field() {
+fn enum_tuple_variant() {
     enum Either {
         Left(usize),
         Right(usize),
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueEnumField {
+    struct EnumTupleVariant {
         #[default = Either::Left(0)]
         field1: Either,
     }
 
-    let thing = DefaultValueEnumField!();
+    let thing = EnumTupleVariant!();
 
     assert_eq!(thing.field1, Either::Left(0));
 }
 
 #[test]
-fn default_value_enum_named_field() {
+fn enum_struct_variant() {
     enum Either {
         Left { value: usize },
         Right { value: usize },
     }
     #[derive(Debug, PartialEq, ConstructorMacro)]
-    struct DefaultValueEnumNamedField {
+    struct EnumStructVariant {
         #[default = Either::Left { value: 0 }]
         field1: Either,
     }
 
-    let thing = DefaultValueEnumNamedField!();
+    let thing = EnumStructVariant!();
 
     assert_eq!(thing.field1, Either::Left { value: 0 });
-}
-
-#[test]
-fn unit_struct() {
-    #[derive(ConstructorMacro)]
-    struct EmptyThing;
-
-    let _thing = EmptyThing!();
-}
-
-#[test]
-fn module() {
-    mod module {
-        use super::*;
-        #[derive(ConstructorMacro)]
-        pub struct InnerThing;
-    }
-
-    use module::InnerThing;
-    let _thing = InnerThing!();
 }
