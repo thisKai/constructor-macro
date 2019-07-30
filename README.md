@@ -14,7 +14,7 @@ use constructor_macro::ConstructorMacro;
 
 #[derive(ConstructorMacro)]
 pub struct Thing {
-    #[default = 1]
+    #[default(1)]
     pub field1: i32,
     pub field2: i32,
 }
