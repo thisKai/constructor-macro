@@ -12,7 +12,6 @@ pub struct DefaultValue {
 }
 impl Parse for DefaultValue {
     fn parse(input: ParseStream) -> Result<Self> {
-        dbg!(&input);
         let content;
         Ok(Self {
             paren: parenthesized!(content in input),
